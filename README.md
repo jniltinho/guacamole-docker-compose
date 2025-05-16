@@ -1,6 +1,6 @@
+# Guacamole with docker compose
 
-# guacamole-docker-compose
-Build Apache Guacamole using MariaDB and Nginx with docker compose. Utilizes Docker secrets and a persistent database volume.
+Build Apache Guacamole using MariaDB and Nginx with docker compose.
 
 I have an upstream WAF and Reverse Proxy that uses LE Certificates. That proxy connects to this instance and some other services I self host. This project was created so I could quickly stand up guacamole in my environment. It can work for you as well if u want to leverage self signed certificates. You are welcome to incorporate a LE version that auto updates.
 
