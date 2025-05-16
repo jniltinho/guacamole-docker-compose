@@ -2,21 +2,20 @@
 # @tankmek
  
 services:
- 
 # Configure MariaDB with persistent storage
 # Need to init the db
   database:
     image: mariadb:10.11.2
-    hostname: db
+    hostname: db_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: '/run/secrets/mysql-root'
-      MYSQL_DATABASE: 'guacamole_db'
-      MYSQL_USER: 'guacamole_user'
-      MYSQL_PASSWORD: '/run/secrets/guacamole-user'
-    container_name: db 
+      MYSQL_ROOT_PASSWORD: 'mysql-root-pass'
+      MYSQL_DATABASE: 'guacamole'
+      MYSQL_USER: 'guacamole'
+      MYSQL_PASSWORD: 'guacamole-user-pass'
+    container_name: db_mysql 
     volumes:
-      - "db:/var/lib/mysql"
+      - "./db:/var/lib/mysql"
     secrets:
       - mysql-root
       - guacamole-user
@@ -37,13 +36,10 @@ services:
       - guacd
     environment:
       GUACD_HOSTNAME: guacd
-      MYSQL_HOSTNAME: db
-      MYSQL_DATABASE: guacamole_db
-      MYSQL_USER: guacamole_user
+      MYSQL_HOSTNAME: db_mysql
+      MYSQL_DATABASE: guacamole
+      MYSQL_USER: guacamole
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_PASSWORD_FILE: '/run/secrets/guacamole-user'
-    secrets:
-      - guacamole-user
 
 # Web Proxy
   gproxy:
@@ -58,15 +54,3 @@ services:
       - "443:443"
     depends_on:
       - guacamole
-
-# Credentials 
-secrets:
-  mysql-root:
-    file: mysql-root
-  guacamole-user:
-    file: guacamole-user
- 
-# This volume has to be created before docker-compose up
-volumes:
-  db:
-    external: true
